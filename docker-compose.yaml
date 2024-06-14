@@ -1,0 +1,37 @@
+---
+version: "3.3"
+services:
+  database:
+    image: mysql:5.7
+    container_name: db
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mohammad
+      MYSQL_DATABASE: mohammad_DB
+      MYSQL_USER: mohammad
+      MYSQL_PASSWORD: mohammad
+    networks:
+      compose_net:  
+  wordpress:        
+    image: wordpress:latest
+    container_name: wordpress
+    restart: always
+    ports:
+      - 8080:80
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    depends_on:
+    - database
+networks:
+  compose_net:
+    external: false #its mean it manage here
+volumes:      
+  db_data:
+    name: db_data 
+
